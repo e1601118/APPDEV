@@ -1,4 +1,5 @@
 # README
+# Written by The Anh
 Raspberry Pi acoustic sensor project
 
 This project will turn a raspberry Pi 3 into an acoustic sensor
