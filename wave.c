@@ -89,15 +89,15 @@ void displayWAVdata(short int d[])
 //	system("clear");
 	int i,j;
 	double sum200, rms200;
-	for (i=0;i<=212;i++) //Terminal has 80 columns
+	for (i=0;i<=78;i++) //Terminal has 80 columns
 	{
 		sum200=0.0; //Initialize the accumulator
-		for (j=0;j<=SAMPLE_RATE/214;j++)
+		for (j=0;j<=SAMPLE_RATE/80;j++)
 		{
 			sum200 += (*d)*(*d);
 			d++;			//treat d as a pointer, pointer increament
 		}
-		rms200=sqrt(sum200/(SAMPLE_RATE/214));
+		rms200=sqrt(sum200/(SAMPLE_RATE/80));
 #ifdef DEBUG	//conditional compiling
 		printf("%10.2f ",rms200);
 //		if (i%10==0) printf("\n");
