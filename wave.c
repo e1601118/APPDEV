@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "screen.h"
+#include "comm.h"
 
 //this program will open a wave file, a display WAV header info
 //this program will create a wave file
@@ -84,12 +85,18 @@ void printID(char id[])
 	printf("\n");
 }
 
+//function calculates 1s sample into 80 pieces of RMS values
+//However, only 8 pieces of RMS data are sent to the server as Fast Mode
+// of Sound Level Meter (SLM)
+
 void displayWAVdata(short int d[])
 {
 //	system("clear");
 	int i,j;
-	double sum200, rms200;
-	for (i=0;i<=78;i++) //Terminal has 80 columns
+	double sum200, rms200, max200=0.0, min200=30000.0;	//Cal RMS200
+	double Leqf[8], sum2000 = 0.0;				//Cal RMS2000 (fast Leq values)
+
+	for (i=0;i<=80-2;i++) //Terminal has 80 columns
 	{
 		sum200=0.0; //Initialize the accumulator
 		for (j=0;j<=SAMPLE_RATE/80;j++)
@@ -97,36 +104,29 @@ void displayWAVdata(short int d[])
 			sum200 += (*d)*(*d);
 			d++;			//treat d as a pointer, pointer increament
 		}
-		rms200=sqrt(sum200/(SAMPLE_RATE/80));
+		sum2000+=sum200;
+		if (i%10==9)
+		{
+			Leqf[i/10]=sqrt(sum2000/SAMPLE_RATE/8);
+			sum2000 = 0.0;	//reset sum2000
+		}
+		rms200 = sqrt(sum200/(SAMPLE_RATE/80));
+//		rms200 = 20 * log10(rms200);		//find decibel value
+		if (max200 < rms200) max200=rms200;
+		if (min200 > rms200) min200=rms200;
+		// find decibel value of sound using logrithm
 #ifdef DEBUG	//conditional compiling
-		printf("%10.2f ",rms200);
-//		if (i%10==0) printf("\n");
+//		printf("%10.2f \n",rms200);
 #else
 		setFGcolor(GREEN);
 		displayBar(rms200,i+2);
 #endif
 	}
-}
+#ifdef DEBUG
+//		printf("max = %.2f min = %.2f\n",max200,min200);
+#endif
 
-void displayWAVdata_1o(short int d[])
-{
-    short int min, max;
-    int i,j;
-    min = d[0];
-    max = min;
-    for (i=1;i<=SAMPLE_RATE;i++)
-    {
-        if (max<d[i]) max=d[i];
-        if (min>d[i]) min=d[i];
-    }
-//    printf("%d %d\n",min,max);
-    max = max-min;
-    for (i=SAMPLE_RATE-60;i<SAMPLE_RATE;i++)
-    {
-         short int temp=((d[i]-min)*50)/max;
-         for (j=0;j<=temp;j++)
-                   printf(" ");
-//         usleep(1000);
-         printf("o\n");
-	}
+#ifdef COMM	//Only in the case COMM is defined, then send data to server
+	send_data_curl(Leqf);
+#endif
 }
