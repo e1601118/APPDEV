@@ -2,9 +2,10 @@
 # Written by The Anh
 # This project is written for Linux OS
 
-Raspberry Pi acoustic sensor project
+OVERVIEW:
+	Raspberry Pi acoustic sensor project
 
-This project will turn a raspberry Pi 3 into an acoustic sensor
+	This project will turn a raspberry Pi 3 into an acoustic sensor
 
 1. Configuration:
 
