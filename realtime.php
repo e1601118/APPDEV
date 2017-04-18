@@ -8,7 +8,7 @@
 		<!-- This php code will write all the recorded-data to <input> with type hidden and number id(s) for all -->
 		<br>
 		<br>
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>		<!--Link to Google API-->
 		<div id="chart_div" style="height:600"></div>
       
 		<script type="text/javascript">
@@ -30,7 +30,8 @@
 							$a = explode(";",$string);
 							foreach($a as $content)
 							{
-								echo "['',".intval(20*log10($content))."],\r\n";		//convert it to dB
+								if (intval(20*log10($content))!=0)
+									echo "['',".intval(20*log10($content))."],\r\n";		//convert it to dB
 							}
 						}					
 					?>
@@ -56,7 +57,7 @@
 					}
 				  };
 
-				  var chart = new google.visualization.ColumnChart(
+				  var chart = new google.visualization.LineChart(
 					document.getElementById('chart_div'));
 
 				  chart.draw(data, options);
