@@ -68,7 +68,7 @@ OVERVIEW:
 
 	b) View in DEBUG mode, where you can see the file WAV header: go to "wave.h" and add line "#define DEBUG"
 	c) View in COMM  mode, where your program will send the record information to the server: go to "comm.h" and add line "#define COMM"
-	d) To view the visualization, go to: https://www.cc.puv.fi/~e1601118/php/realtime.php
+	d) To view the visualization, go to: https://www.cc.puv.fi/~e1601118/php/realtime.php (Works best with Firefox)
 	e) To stop the program: press Crtl+C or Crtl+Z
 
 4. Files include in this project:
