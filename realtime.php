@@ -1,69 +1,28 @@
 <!--In this program I used Google API to draw a chart which contains last 10s of record-->
+<!--The file code.js will be overwritten after 1s in order to update new data-->
 <html>
 	<head>
 		<title>Sound detector - Real time</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>	<!--Import the jQuery library-->
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>		<!--Link to Google API-->
 	</head>
 	<body style="text-align:center; background-color:#ccffff">
 		<h1 style="text-color:red">Sound detector project in realtime</h1>
-		<!-- This php code will write all the recorded-data to <input> with type hidden and number id(s) for all -->
-		<br>
-		<br>
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>		<!--Link to Google API-->
-		<div id="chart_div" style="height:600"></div>
-      
-		<script type="text/javascript">
-
-			google.charts.load('current', {packages: ['corechart', 'bar']});
-			google.charts.setOnLoadCallback(drawMultSeries);
-
-			function drawMultSeries() {
-				var data = google.visualization.arrayToDataTable(
-				[
-					['Volume level', 'dB'],
-					<?php 
-						// 1 line in sound.log has format as a;b;c;d;e;f;g;h
-						$file = file("sound.log");
-						for ($i = max(0, count($file)-10); $i < count($file); $i++) 
-						{	
-							$string = $file[$i];
-							$string = trim(preg_replace('/\s+/', ' ', $string));
-							$a = explode(";",$string);
-							foreach($a as $content)
-							{
-								if (intval(20*log10($content))!=0)
-									echo "['',".intval(20*log10($content))."],\r\n";		//convert it to dB
-							}
-						}					
-					?>
-				],
-			  false); // 'false' means that the first row contains labels, not data.
-
-				  var options = 
-				  {
-					backgroundColor: '#ccffcc',
-					title: 'REAL TIME SOUND DETECTOR',
-					hAxis: {
-					  title: 'Time (s)',
-					  viewWindow: {
-						min:0,
-						max:100 
-					  }
-					},
-					vAxis: {
-					  title: 'Volume level (dB)',
-					  viewWindow: {
-						min:0,
-						max:100 
-					  }
-					}
-				  };
-
-				  var chart = new google.visualization.LineChart(
-					document.getElementById('chart_div'));
-
-				  chart.draw(data, options);
-				}
-			setTimeout("location.reload()",1000);	//This page will be reload every 1s in order to update the data
+		<p style="text-color:red">Showing last 10s of record</p>
+		<br><br>
+		
+		<div id="chart_div" style="height:600"></div> <!--Show the graph here-->
+		
+		<script id="code" type="text/javascript">	<!--This script tag is use to display the code-->
 		</script>
+		
+		<script type="text/javascript">
+			var auto_refresh = setInterval(function ()
+			{
+				$('#code').load('load.php');		//Run the load.php to get new code.js file
+				$.getScript("code.js");				//Load the code.js to show the graph
+			}, 900);
+		</script>
+		<br><a href="query.php">Click here to see data with your query</a>
 	</body>
 </html>
