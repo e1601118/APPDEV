@@ -21,7 +21,7 @@
 			{
 				$('#code').load('load.php');		//Run the load.php to get new code.js file
 				$.getScript("code.js");				//Load the code.js to show the graph
-			}, 900);
+			}, 1000);					//Run again after 10s
 		</script>
 		<br><a href="query.php">Click here to see data with your query</a>
 	</body>
